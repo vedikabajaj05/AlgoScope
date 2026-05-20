@@ -79,7 +79,6 @@ export default function Visualizer() {
 
   const handleReset = () => {
     clearPlayback()
-    setSearchParams({})
     setBaseArray(createRandomArray())
   }
 
