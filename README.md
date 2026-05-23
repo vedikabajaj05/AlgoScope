@@ -127,7 +127,14 @@ npm install
 # 3. Configure Environment Variables
 # Create a .env file from the example
 cp .env.example .env
-# Open .env and add your VITE_CLERK_PUBLISHABLE_KEY from Clerk Dashboard
+# Open `.env` and add your `VITE_CLERK_PUBLISHABLE_KEY` from the Clerk dashboard
+
+> Note: `VITE_CLERK_PUBLISHABLE_KEY` is optional for local development.
+> If it is not set, AlgoScope will run in an "unauthenticated dev mode" —
+> authentication UI (Sign In / User Button) will be disabled, but all
+> visualizers and features will still work. To test authentication locally,
+> set `VITE_CLERK_PUBLISHABLE_KEY` to your Clerk publishable key before
+> starting the dev server.
 
 # 4. Start the development server
 npm run dev
