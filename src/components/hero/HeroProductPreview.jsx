@@ -22,44 +22,436 @@ const BT_START = [0, 0]
 const BT_END = [7, 4]
 
 const BT_SOLUTION = [
-  [0, 0], [1, 0], [2, 0], [2, 1], [1, 1], [1, 2], [2, 2],
-  [2, 3], [3, 3], [4, 3], [5, 3], [6, 3], [7, 3], [7, 4],
+  [0, 0],
+  [1, 0],
+  [2, 0],
+  [2, 1],
+  [1, 1],
+  [1, 2],
+  [2, 2],
+  [2, 3],
+  [3, 3],
+  [4, 3],
+  [5, 3],
+  [6, 3],
+  [7, 3],
+  [7, 4],
 ]
 
 /** path = active trail; dead = failed attempts; phase labels rollback */
 const BACKTRACK_STEPS = [
   { path: [[0, 0]], dead: [], phase: 'try' },
-  { path: [[0, 0], [1, 0]], dead: [], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0]], dead: [], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [3, 0]], dead: [], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]], dead: [], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [4, 1]], dead: [], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [4, 1], [5, 1]], dead: [[5, 1]], phase: 'dead' },
-  { path: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]], dead: [[5, 1]], phase: 'undo' },
-  { path: [[0, 0], [1, 0], [2, 0], [3, 0]], dead: [[5, 1]], phase: 'undo' },
-  { path: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]], dead: [[5, 1]], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0]], dead: [[5, 1]], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0]], dead: [[5, 1]], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [6, 1]], dead: [[5, 1]], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [6, 1], [7, 1]], dead: [[5, 1], [7, 1]], phase: 'dead' },
-  { path: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0]], dead: [[5, 1], [7, 1]], phase: 'undo' },
-  { path: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]], dead: [[5, 1], [7, 1]], phase: 'undo' },
-  { path: [[0, 0], [1, 0], [2, 0], [3, 0]], dead: [[5, 1], [7, 1]], phase: 'undo' },
-  { path: [[0, 0], [1, 0], [2, 0]], dead: [[5, 1], [7, 1]], phase: 'undo' },
-  { path: [[0, 0], [1, 0], [2, 0], [2, 1]], dead: [[5, 1], [7, 1]], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [2, 1], [1, 1]], dead: [[5, 1], [7, 1]], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [2, 1], [1, 1], [1, 2]], dead: [[5, 1], [7, 1]], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [2, 1], [1, 1], [1, 2], [2, 2]], dead: [[5, 1], [7, 1]], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [2, 1], [1, 1], [1, 2], [2, 2], [2, 3]], dead: [[5, 1], [7, 1]], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [2, 1], [1, 1], [1, 2], [2, 2], [2, 3], [3, 3]], dead: [[5, 1], [7, 1]], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [2, 1], [1, 1], [1, 2], [2, 2], [2, 3], [3, 3], [4, 3]], dead: [[5, 1], [7, 1]], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [2, 1], [1, 1], [1, 2], [2, 2], [2, 3], [3, 3], [4, 3], [5, 3]], dead: [[5, 1], [7, 1]], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [2, 1], [1, 1], [1, 2], [2, 2], [2, 3], [3, 3], [4, 3], [5, 3], [6, 3]], dead: [[5, 1], [7, 1]], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [2, 1], [1, 1], [1, 2], [2, 2], [2, 3], [3, 3], [4, 3], [5, 3], [6, 3], [7, 3]], dead: [[5, 1], [7, 1]], phase: 'try' },
-  { path: [[0, 0], [1, 0], [2, 0], [2, 1], [1, 1], [1, 2], [2, 2], [2, 3], [3, 3], [4, 3], [5, 3], [6, 3], [7, 3], [7, 4]], dead: [[5, 1], [7, 1]], phase: 'found' },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+    ],
+    dead: [],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+    ],
+    dead: [],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+    ],
+    dead: [],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+      [4, 0],
+    ],
+    dead: [],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+      [4, 0],
+      [4, 1],
+    ],
+    dead: [],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+      [4, 0],
+      [4, 1],
+      [5, 1],
+    ],
+    dead: [[5, 1]],
+    phase: 'dead',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+      [4, 0],
+    ],
+    dead: [[5, 1]],
+    phase: 'undo',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+    ],
+    dead: [[5, 1]],
+    phase: 'undo',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+      [4, 0],
+    ],
+    dead: [[5, 1]],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+      [4, 0],
+      [5, 0],
+    ],
+    dead: [[5, 1]],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+      [4, 0],
+      [5, 0],
+      [6, 0],
+    ],
+    dead: [[5, 1]],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+      [4, 0],
+      [5, 0],
+      [6, 0],
+      [6, 1],
+    ],
+    dead: [[5, 1]],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+      [4, 0],
+      [5, 0],
+      [6, 0],
+      [6, 1],
+      [7, 1],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'dead',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+      [4, 0],
+      [5, 0],
+      [6, 0],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'undo',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+      [4, 0],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'undo',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'undo',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'undo',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [2, 1],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [2, 1],
+      [1, 1],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [2, 1],
+      [1, 1],
+      [1, 2],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [2, 1],
+      [1, 1],
+      [1, 2],
+      [2, 2],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [2, 1],
+      [1, 1],
+      [1, 2],
+      [2, 2],
+      [2, 3],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [2, 1],
+      [1, 1],
+      [1, 2],
+      [2, 2],
+      [2, 3],
+      [3, 3],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [2, 1],
+      [1, 1],
+      [1, 2],
+      [2, 2],
+      [2, 3],
+      [3, 3],
+      [4, 3],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [2, 1],
+      [1, 1],
+      [1, 2],
+      [2, 2],
+      [2, 3],
+      [3, 3],
+      [4, 3],
+      [5, 3],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [2, 1],
+      [1, 1],
+      [1, 2],
+      [2, 2],
+      [2, 3],
+      [3, 3],
+      [4, 3],
+      [5, 3],
+      [6, 3],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [2, 1],
+      [1, 1],
+      [1, 2],
+      [2, 2],
+      [2, 3],
+      [3, 3],
+      [4, 3],
+      [5, 3],
+      [6, 3],
+      [7, 3],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'try',
+  },
+  {
+    path: [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [2, 1],
+      [1, 1],
+      [1, 2],
+      [2, 2],
+      [2, 3],
+      [3, 3],
+      [4, 3],
+      [5, 3],
+      [6, 3],
+      [7, 3],
+      [7, 4],
+    ],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
+    phase: 'found',
+  },
   ...BT_SOLUTION.map((_, i) => ({
     path: BT_SOLUTION.slice(0, i + 1),
-    dead: [[5, 1], [7, 1]],
+    dead: [
+      [5, 1],
+      [7, 1],
+    ],
     phase: i === BT_SOLUTION.length - 1 ? 'complete' : 'success',
   })),
 ]
@@ -75,7 +467,16 @@ const G_NODES = [
   { id: 6, x: 78, y: 44 },
 ]
 const G_EDGES = [
-  [1, 2], [1, 3], [1, 4], [2, 4], [2, 6], [3, 4], [3, 5], [4, 5], [4, 6], [5, 6],
+  [1, 2],
+  [1, 3],
+  [1, 4],
+  [2, 4],
+  [2, 6],
+  [3, 4],
+  [3, 5],
+  [4, 5],
+  [4, 6],
+  [5, 6],
 ]
 const G_LEVEL_COLORS = [
   'rgba(56,189,248,0.9)',
@@ -94,10 +495,21 @@ const T_NODES = [
   { id: 5, x: 60, y: 46, depth: 2 },
   { id: 6, x: 80, y: 46, depth: 2 },
 ]
-const T_EDGES = [[0, 1], [0, 2], [1, 3], [1, 4], [2, 5], [2, 6]]
+const T_EDGES = [
+  [0, 1],
+  [0, 2],
+  [1, 3],
+  [1, 4],
+  [2, 5],
+  [2, 6],
+]
 const T_CHILDREN = { 0: [1, 2], 1: [3, 4], 2: [5, 6] }
 
-const { steps: G_BFS_STEPS, parent: G_PARENT, level: G_LEVEL } = buildGraphBfsSteps(1)
+const {
+  steps: G_BFS_STEPS,
+  parent: G_PARENT,
+  level: G_LEVEL,
+} = buildGraphBfsSteps(1)
 const T_DFS_STEPS = buildTreeDfsSteps(0)
 
 function buildGraphBfsSteps(startId) {
@@ -233,7 +645,10 @@ function validateBacktrackSteps() {
       }
     }
   }
-  if (pathKey(BT_SOLUTION[0]) !== pathKey(BT_START) || pathKey(BT_SOLUTION.at(-1)) !== pathKey(BT_END)) {
+  if (
+    pathKey(BT_SOLUTION[0]) !== pathKey(BT_START) ||
+    pathKey(BT_SOLUTION.at(-1)) !== pathKey(BT_END)
+  ) {
     throw new Error('Solution must connect start to end')
   }
   if (!validateMazePath(BT_SOLUTION)) {
@@ -265,17 +680,26 @@ export function HeroProductPreview() {
   const [tStep, setTStep] = useState(0)
 
   useEffect(() => {
-    const id = setInterval(() => setBtStep((s) => (s + 1) % BACKTRACK_STEPS.length), STEP_MS.backtrack)
+    const id = setInterval(
+      () => setBtStep((s) => (s + 1) % BACKTRACK_STEPS.length),
+      STEP_MS.backtrack
+    )
     return () => clearInterval(id)
   }, [])
 
   useEffect(() => {
-    const id = setInterval(() => setGStep((s) => (s + 1) % G_BFS_STEPS.length), STEP_MS.graph)
+    const id = setInterval(
+      () => setGStep((s) => (s + 1) % G_BFS_STEPS.length),
+      STEP_MS.graph
+    )
     return () => clearInterval(id)
   }, [])
 
   useEffect(() => {
-    const id = setInterval(() => setTStep((s) => (s + 1) % T_DFS_STEPS.length), STEP_MS.tree)
+    const id = setInterval(
+      () => setTStep((s) => (s + 1) % T_DFS_STEPS.length),
+      STEP_MS.tree
+    )
     return () => clearInterval(id)
   }, [])
 
@@ -283,7 +707,8 @@ export function HeroProductPreview() {
   const isSuccessPhase = bt.phase === 'success' || bt.phase === 'complete'
   const pathSet = new Set(bt.path.map(pathKey))
   const deadSet = new Set(bt.dead.map(pathKey))
-  const latestDead = bt.dead.length > 0 ? pathKey(bt.dead[bt.dead.length - 1]) : null
+  const latestDead =
+    bt.dead.length > 0 ? pathKey(bt.dead[bt.dead.length - 1]) : null
   const head = bt.path[bt.path.length - 1]
   const headKey = pathKey(head)
 
@@ -346,7 +771,12 @@ export function HeroProductPreview() {
         <div className="grid h-[calc(100%-2rem)] min-h-0 grid-cols-1 grid-rows-[minmax(148px,0.4fr)_minmax(0,0.6fr)] sm:h-[calc(100%-2.25rem)] md:grid-cols-[40fr_60fr] md:grid-rows-1">
           {/* Backtracking */}
           <div className="flex min-h-0 flex-col border-b border-white/[0.06] bg-[#0a0a0c] md:border-b-0 md:border-r">
-            <PanelHead title="Backtracking" badge={phaseLabel} tone={bt.phase} compact />
+            <PanelHead
+              title="Backtracking"
+              badge={phaseLabel}
+              tone={bt.phase}
+              compact
+            />
             <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center p-2 sm:p-2.5">
               <svg
                 viewBox={`0 0 ${BT_W} ${BT_H}`}
@@ -382,7 +812,9 @@ export function HeroProductPreview() {
                               ? '#dc2626'
                               : onSuccess
                                 ? 'rgba(16,185,129,0.88)'
-                                : end && (bt.phase === 'found' || bt.phase === 'complete')
+                                : end &&
+                                    (bt.phase === 'found' ||
+                                      bt.phase === 'complete')
                                   ? 'rgba(16,185,129,0.9)'
                                   : start
                                     ? 'rgba(56,189,248,0.85)'
@@ -429,12 +861,12 @@ export function HeroProductPreview() {
                             isDeadProbe
                               ? 'rgba(254,202,202,1)'
                               : bt.phase === 'dead'
-                              ? 'rgba(239,68,68,0.9)'
-                              : bt.phase === 'undo'
-                                ? 'rgba(251,191,36,0.9)'
-                                : isSuccessPhase
-                                  ? 'rgba(16,185,129,0.95)'
-                                  : 'rgba(255,255,255,0.9)'
+                                ? 'rgba(239,68,68,0.9)'
+                                : bt.phase === 'undo'
+                                  ? 'rgba(251,191,36,0.9)'
+                                  : isSuccessPhase
+                                    ? 'rgba(16,185,129,0.95)'
+                                    : 'rgba(255,255,255,0.9)'
                           }
                           strokeWidth="1.5"
                           animate={{ r: [6, 8, 6] }}
@@ -523,11 +955,26 @@ function GraphBfsPanel({ step }) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col border-b border-white/[0.06] bg-[#0b0b0d]">
-      <PanelHead title="Graph · BFS" badge={`L${step.level}`} tone="graph" compact />
+      <PanelHead
+        title="Graph · BFS"
+        badge={`L${step.level}`}
+        tone="graph"
+        compact
+      />
       <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)_auto] px-2 pb-1 pt-1 sm:px-3 sm:pb-1.5 sm:pt-1.5">
-        <svg viewBox={G_VIEW} preserveAspectRatio="xMidYMid meet" className="h-full w-full min-h-[80px] sm:min-h-[108px]">
+        <svg
+          viewBox={G_VIEW}
+          preserveAspectRatio="xMidYMid meet"
+          className="h-full w-full min-h-[80px] sm:min-h-[108px]"
+        >
           <defs>
-            <filter id="hero-glow-sky" x="-50%" y="-50%" width="200%" height="200%">
+            <filter
+              id="hero-glow-sky"
+              x="-50%"
+              y="-50%"
+              width="200%"
+              height="200%"
+            >
               <feGaussianBlur stdDeviation="1.2" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
@@ -537,7 +984,8 @@ function GraphBfsPanel({ step }) {
           </defs>
           {G_NODES.map((n) => {
             const lvl = G_LEVEL[n.id] ?? 0
-            const isFrontier = lvl === maxLevel && (visited.has(n.id) || queue.has(n.id))
+            const isFrontier =
+              lvl === maxLevel && (visited.has(n.id) || queue.has(n.id))
             if (!isFrontier || queue.size === 0) return null
             return (
               <motion.circle
@@ -603,14 +1051,21 @@ function GraphBfsPanel({ step }) {
                     cy={n.y}
                     r={6.5}
                     fill="none"
-                    stroke={isNext ? 'rgba(56,189,248,0.75)' : 'rgba(56,189,248,0.38)'}
+                    stroke={
+                      isNext ? 'rgba(56,189,248,0.75)' : 'rgba(56,189,248,0.38)'
+                    }
                     strokeWidth="1"
                     strokeDasharray={isNext ? '0' : '2 2'}
                   />
                 )}
                 {isCurrent && (
                   <>
-                    <circle cx={n.x} cy={n.y} r={8} fill="rgba(56,189,248,0.12)" />
+                    <circle
+                      cx={n.x}
+                      cy={n.y}
+                      r={8}
+                      fill="rgba(56,189,248,0.12)"
+                    />
                     <motion.circle
                       cx={n.x}
                       cy={n.y}
@@ -618,7 +1073,10 @@ function GraphBfsPanel({ step }) {
                       fill="none"
                       stroke="rgba(125,211,252,0.6)"
                       strokeWidth="1"
-                      animate={{ r: [6.5, 7.5, 6.5], opacity: [0.5, 0.85, 0.5] }}
+                      animate={{
+                        r: [6.5, 7.5, 6.5],
+                        opacity: [0.5, 0.85, 0.5],
+                      }}
                       transition={{ duration: 1.4, repeat: Infinity }}
                     />
                   </>
@@ -669,11 +1127,26 @@ function TreeDfsPanel({ step }) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-[#0a0a0c]">
-      <PanelHead title="Tree · DFS" badge={`d${T_NODES[current].depth}`} tone="tree" compact />
+      <PanelHead
+        title="Tree · DFS"
+        badge={`d${T_NODES[current].depth}`}
+        tone="tree"
+        compact
+      />
       <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)_auto] px-2 pb-1 pt-1 sm:px-3 sm:pb-1.5 sm:pt-1.5">
-        <svg viewBox={T_VIEW} preserveAspectRatio="xMidYMid meet" className="h-full w-full min-h-[80px] sm:min-h-[108px]">
+        <svg
+          viewBox={T_VIEW}
+          preserveAspectRatio="xMidYMid meet"
+          className="h-full w-full min-h-[80px] sm:min-h-[108px]"
+        >
           <defs>
-            <filter id="hero-glow-violet" x="-50%" y="-50%" width="200%" height="200%">
+            <filter
+              id="hero-glow-violet"
+              x="-50%"
+              y="-50%"
+              width="200%"
+              height="200%"
+            >
               <feGaussianBlur stdDeviation="1.2" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
@@ -689,8 +1162,14 @@ function TreeDfsPanel({ step }) {
               width={88 - d * 6}
               height={14}
               rx={2}
-              fill={stackDepths.has(d) ? 'rgba(167,139,250,0.05)' : 'transparent'}
-              stroke={stackDepths.has(d) ? 'rgba(167,139,250,0.12)' : 'rgba(255,255,255,0.03)'}
+              fill={
+                stackDepths.has(d) ? 'rgba(167,139,250,0.05)' : 'transparent'
+              }
+              stroke={
+                stackDepths.has(d)
+                  ? 'rgba(167,139,250,0.12)'
+                  : 'rgba(255,255,255,0.03)'
+              }
               strokeWidth="0.5"
             />
           ))}
@@ -744,16 +1223,27 @@ function TreeDfsPanel({ step }) {
                       cx={n.x}
                       cy={n.y}
                       r={8}
-                      fill={goingUp ? 'rgba(251,191,36,0.1)' : 'rgba(167,139,250,0.12)'}
+                      fill={
+                        goingUp
+                          ? 'rgba(251,191,36,0.1)'
+                          : 'rgba(167,139,250,0.12)'
+                      }
                     />
                     <motion.circle
                       cx={n.x}
                       cy={n.y}
                       r={7}
                       fill="none"
-                      stroke={goingUp ? 'rgba(251,191,36,0.55)' : 'rgba(196,181,253,0.55)'}
+                      stroke={
+                        goingUp
+                          ? 'rgba(251,191,36,0.55)'
+                          : 'rgba(196,181,253,0.55)'
+                      }
                       strokeWidth="1"
-                      animate={{ r: [6.5, 7.5, 6.5], opacity: [0.45, 0.8, 0.45] }}
+                      animate={{
+                        r: [6.5, 7.5, 6.5],
+                        opacity: [0.45, 0.8, 0.45],
+                      }}
                       transition={{ duration: 1.3, repeat: Infinity }}
                     />
                   </>
@@ -816,7 +1306,9 @@ function TraversalStrip({ tone, status, goingUp = false }) {
         animate={{ opacity: [0.55, 1, 0.55] }}
         transition={{ duration: 1.8, repeat: Infinity }}
       />
-      <span className="truncate font-mono text-[8px] text-zinc-500">{status}</span>
+      <span className="truncate font-mono text-[8px] text-zinc-500">
+        {status}
+      </span>
     </div>
   )
 }
@@ -836,7 +1328,9 @@ function PanelHead({ title, badge, tone, compact = false }) {
     <div
       className={`flex shrink-0 items-center justify-between border-b border-white/[0.05] bg-white/[0.01] ${compact ? 'px-2.5 py-1' : 'px-3 py-1.5'}`}
     >
-      <span className={`font-medium tracking-tight text-zinc-400 ${compact ? 'text-[9px]' : 'text-[10px]'}`}>
+      <span
+        className={`font-medium tracking-tight text-zinc-400 ${compact ? 'text-[9px]' : 'text-[10px]'}`}
+      >
         {title}
       </span>
       <span

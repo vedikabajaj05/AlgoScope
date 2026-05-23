@@ -19,7 +19,10 @@ const item = {
 
 export function Hero() {
   return (
-    <section aria-labelledby="hero-heading" className="relative w-full overflow-hidden">
+    <section
+      aria-labelledby="hero-heading"
+      className="relative w-full overflow-hidden"
+    >
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <div className="theme-grid absolute inset-0 bg-[length:40px_40px] opacity-[0.26] [mask-image:radial-gradient(ellipse_80%_65%_at_65%_25%,#000_35%,transparent_88%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_42%_at_72%_32%,rgba(56,189,248,0.04),transparent_62%)]" />
@@ -76,7 +79,9 @@ export function Hero() {
                 href="#explore"
                 onClick={(e) => {
                   e.preventDefault()
-                  document.getElementById('explore')?.scrollIntoView({ behavior: 'smooth' })
+                  document
+                    .getElementById('explore')
+                    ?.scrollIntoView({ behavior: 'smooth' })
                 }}
                 className="group relative inline-flex h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-[10px] bg-white px-4 text-[13px] font-semibold text-zinc-950 shadow-[0_1px_2px_rgba(0,0,0,0.45),0_0_0_1px_rgba(255,255,255,0.08)_inset] transition-[transform,box-shadow,background] duration-300 hover:bg-zinc-50 hover:shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_12px_32px_-8px_rgba(255,255,255,0.28)] active:scale-[0.98] sm:h-10 sm:w-auto sm:justify-start"
               >
@@ -134,7 +139,9 @@ export function Hero() {
 function Meta({ n, t }) {
   return (
     <span className="inline-flex items-baseline gap-1.5">
-      <span className="logo-font font-semibold tabular-nums text-zinc-400">{n}</span>
+      <span className="logo-font font-semibold tabular-nums text-zinc-400">
+        {n}
+      </span>
       <span>{t}</span>
     </span>
   )
