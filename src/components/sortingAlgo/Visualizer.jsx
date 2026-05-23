@@ -5,6 +5,7 @@ import CodePanel from '../visualizer/CodePanel'
 import { useStepPlayback } from '../visualizer/useStepPlayback'
 import ComplexityCard from '../ComplexityCard'
 import Tooltip from '../Tooltip'
+import TestCaseManager from '../testCaseManager/TestCaseManager'
 
 import * as bubble from '../../algorithms/sorting/bubbleSortSteps'
 import * as selection from '../../algorithms/sorting/selectionSortSteps'
@@ -39,6 +40,21 @@ const createRandomArray = () =>
     { length: DEFAULT_ARRAY_SIZE },
     () => Math.floor(Math.random() * (RANDOM_MAX - RANDOM_MIN)) + RANDOM_MIN
   )
+
+const parseStoredArray = (value) =>
+  value
+    .split(/[,\s]+/)
+    .map((item) => Number(item.trim()))
+    .filter((item) => !Number.isNaN(item))
+
+const buildSortSampleCases = (algorithm) => [
+  {
+    name: 'Nearly Sorted Array',
+    algorithm,
+    input: '12, 18, 21, 25, 19, 29, 34, 41',
+    description: 'A small array with one out-of-place element.',
+  },
+]
 
 const STATE_COLORS = {
   compare: { bg: '#2563eb', border: '#60a5fa' },
@@ -113,6 +129,11 @@ export default function Visualizer() {
   const algoFromUrl = searchParams.get('algo')
   const selectedAlgorithm =
     algoFromUrl && algoMap[algoFromUrl] ? algoFromUrl : ''
+  const testCaseAlgorithm = selectedAlgorithm || algorithmType
+  const sortSampleCases = useMemo(
+    () => buildSortSampleCases(testCaseAlgorithm),
+    [testCaseAlgorithm]
+  )
 
   const {
     currentStep,
@@ -434,6 +455,20 @@ export default function Visualizer() {
 
               <div className="rounded-2xl border border-slate-700/80 bg-slate-900/60 p-4 shadow-xl">
                 <div className="space-y-4">
+                  <TestCaseManager
+                    algorithm={testCaseAlgorithm}
+                    currentInput={baseArray.join(',')}
+                    sampleCases={sortSampleCases}
+                    onLoad={(input) => {
+                      const parsed = parseStoredArray(input)
+                      if (!parsed.length) return
+                      clearPlayback()
+                      setBaseArray(parsed)
+                      setCustomInput(parsed.join(', '))
+                      setInputError('')
+                    }}
+                  />
+
                   <div>
                     <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400/80">
                       Sort Category
