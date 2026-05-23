@@ -1,6 +1,8 @@
 import React, { lazy, Suspense } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react'
+
+const HAS_CLERK = Boolean(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY)
 import AppLayout from './components/AppLayout'
 
 // Lazy load pages for better performance
@@ -105,12 +107,19 @@ function App() {
       element: (
         <Suspense fallback={<PageLoader />}>
           <AppLayout>
-            <SignedIn>
+            {HAS_CLERK ? (
+              <>
+                <SignedIn>
+                  <PracticePage />
+                </SignedIn>
+                <SignedOut>
+                  <RedirectToSignIn />
+                </SignedOut>
+              </>
+            ) : (
+              // If Clerk isn't configured, allow access to PracticePage in dev mode
               <PracticePage />
-            </SignedIn>
-            <SignedOut>
-              <RedirectToSignIn />
-            </SignedOut>
+            )}
           </AppLayout>
         </Suspense>
       ),
