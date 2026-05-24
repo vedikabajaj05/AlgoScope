@@ -104,6 +104,23 @@ function AlgoPanel({
   const stepIndexRef = useRef(steps.length > 0 ? 0 : -1)
 
   useEffect(() => {
+    if (steps.length === 0) {
+      setStepIndex(-1)
+      stepIndexRef.current = -1
+      setIsPlaying(false)
+      setIsFinished(false)
+      setElapsedMs(null)
+      setLiveComparisons(0)
+      setLiveSwaps(0)
+      startTimeRef.current = null
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      }
+    }
+  }, [steps.length])
+
+  useEffect(() => {
     if (!isPlaying || steps.length === 0) return
     if (startTimeRef.current === null) startTimeRef.current = performance.now()
 
