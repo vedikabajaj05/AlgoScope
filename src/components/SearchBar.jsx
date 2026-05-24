@@ -148,9 +148,16 @@ const ALGORITHMS = [
     name: 'Backtracking',
     category: 'Backtracking',
     route: '/backtracking?algo=nqueens',
-    keywords: ['backtracking', 'n queens', 'nqueens', 'sudoku', 'recursion', 'constraint'],
+    keywords: [
+      'backtracking',
+      'n queens',
+      'nqueens',
+      'sudoku',
+      'recursion',
+      'constraint',
+    ],
   },
-  
+
   // Math Theory
   {
     id: 'mathTheory',
